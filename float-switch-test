@@ -1,0 +1,16 @@
+const int floatPin = 27;
+void setup() {
+Serial.begin(115200); 
+pinMode(floatPin, INPUT_PULLUP);
+}
+
+void loop() {
+int state = digitalRead(floatPin);
+if(state == LOW){
+  Serial.println("Refill Needed");
+  }
+else{
+  Serial.println("Refilled");
+  }
+delay(1000);
+}
