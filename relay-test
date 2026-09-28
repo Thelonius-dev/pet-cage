@@ -1,0 +1,25 @@
+#include "driver/gpio.h"
+
+#define RELAY_PIN 4  // Use GPIO 4, 18, 19, or 23
+
+void setup() {
+  Serial.begin(115200);
+
+  // Set as standard output
+  pinMode(RELAY_PIN, OUTPUT);
+
+  // Force pin to maximum drive strength (Level 3 = strongest pull to GND)
+  gpio_set_drive_capability((gpio_num_t)RELAY_PIN, GPIO_DRIVE_CAP_3);
+
+  digitalWrite(RELAY_PIN, HIGH); // Start OFF
+}
+
+void loop() {
+  Serial.println("Relay ON");
+  digitalWrite(RELAY_PIN, LOW);  // Strong pull to 0V
+  delay(2000);
+
+  Serial.println("Relay OFF");
+  digitalWrite(RELAY_PIN, HIGH);
+  delay(2000);
+}
