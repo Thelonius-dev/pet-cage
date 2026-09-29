@@ -1,0 +1,37 @@
+#include "driver/gpio.h"
+
+#define RELAY_PIN 4
+#define FLOAT_PIN 18
+
+void setup() {
+  Serial.begin(115200);
+
+  // Set up relay pin with maximum drive strength
+  pinMode(RELAY_PIN, OUTPUT);
+  gpio_set_drive_capability((gpio_num_t)RELAY_PIN, GPIO_DRIVE_CAP_3);
+  digitalWrite(RELAY_PIN, HIGH); // Relay starts OFF (Active-LOW)
+
+  // Set up float switch pin with internal pull-up resistor
+  // Normal state = HIGH (3.3V)
+  // Float switch closed = LOW (0V)
+  pinMode(FLOAT_PIN, INPUT_PULLUP);
+
+  Serial.println("Water level controller started.");
+}
+
+void loop() {
+  int floatState = digitalRead(FLOAT_PIN);
+
+  if (floatState == LOW) {
+    // Switch is closed (water has triggered the float)
+    Serial.println("Float switch closed -> Relay ON");
+    digitalWrite(RELAY_PIN, LOW); // Active-LOW: Turn relay ON
+  } else {
+    // Switch is open
+    Serial.println("Float switch open -> Relay OFF");
+    digitalWrite(RELAY_PIN, HIGH); // Turn relay OFF
+  }
+
+  // Small delay to prevent water sloshing/ripples from bouncing the switch
+  delay(500);
+}
